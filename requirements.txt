@@ -1,0 +1,9 @@
+# Direct dependency: only Flask
+Flask==1.1.2
+
+# Transitive dependencies pinned for compatibility and vulnerability demonstration
+# These need to be pinned because Flask 1.1.2 is old and incompatible with latest versions
+Jinja2==2.11.3      # Vulnerable: GHSA-h5c8-rqwp-cp95, GHSA-h75v-3vvj-5mfj, etc.
+MarkupSafe==2.0.1   # Compatibility: Jinja2 2.11.3 breaks with MarkupSafe >=2.1
+itsdangerous==2.0.1 # Compatibility: Flask 1.1.2 breaks with itsdangerous >=2.1
+Werkzeug==2.0.3     # Compatibility: Flask 1.1.2 breaks with Werkzeug >=2.1

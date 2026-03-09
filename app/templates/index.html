@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transitive Vulnerability Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+        .info {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        code {
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Transitive Dependency Vulnerability Demo</h1>
+        
+        <div class="info">
+            <strong>⚠️ Note:</strong> This app demonstrates a vulnerability in the <code>|xmlattr</code> 
+            filter from Jinja2, which is a <strong>transitive dependency</strong> through Flask. 
+            The application code never imports jinja2 directly.
+        </div>
+
+        <h2>Submit User Attributes</h2>
+        <form method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter name">
+            
+            <label for="class">CSS Class:</label>
+            <input type="text" id="class" name="class" placeholder="Enter CSS class">
+            
+            <label for="data-value">Data Value:</label>
+            <input type="text" id="data-value" name="data-value" placeholder="Enter data attribute">
+            
+            <button type="submit">Generate Attributes</button>
+        </form>
+
+        {% if user_attrs %}
+        <div class="output">
+            <h3>Generated HTML Attributes:</h3>
+            <p>The following div uses the <code>|xmlattr</code> filter from Jinja2:</p>
+            
+            {# This is where the xmlattr filter is used - potential vulnerability #}
+            <div {{ user_attrs|xmlattr }}>
+                Sample Content
+            </div>
+            
+            <h4>Raw HTML Output:</h4>
+            <code style="display: block; padding: 10px; background-color: #e9ecef;">
+                &lt;div {{ user_attrs|xmlattr }}&gt;Sample Content&lt;/div&gt;
+            </code>
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 30px; padding: 15px; background-color: #e7f3ff; border-radius: 4px;">
+            <h3>🔍 Testing the Vulnerability</h3>
+            <p>This application demonstrates how vulnerabilities in transitive dependencies can affect your app:</p>
+            <ul>
+                <li><strong>Direct dependency:</strong> Flask (declared in requirements.txt)</li>
+                <li><strong>Transitive dependency:</strong> Jinja2 (comes with Flask)</li>
+                <li><strong>Vulnerability surface:</strong> The <code>|xmlattr</code> filter in templates</li>
+            </ul>
+            <p>Try submitting various attribute values to test how the filter handles special characters.</p>
+        </div>
+    </div>
+</body>
+</html>
